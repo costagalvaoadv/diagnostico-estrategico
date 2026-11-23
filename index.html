@@ -216,6 +216,7 @@ body.vip{background:#fbf8f3;color:#251c1c;font:300 17px/1.7 Jost,system-ui,sans-
 .v-fil{width:64px;height:1px;background:var(--gold);margin:0 auto 26px}
 .v-nome{font:italic 400 clamp(24px,4vw,30px)/1.2 'Bodoni Moda',serif;color:#fff}
 .v-capa .v-bt{margin-top:48px}
+.v-ret{margin-top:14px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .v-capa .v-lk{color:#cdb9a3;margin-top:14px}.v-capa .v-lk:hover{color:#fff}
 .v-capa p{max-width:460px;color:#e9dccb;margin:0 auto}
 .v-bt{display:inline-flex;align-items:center;gap:14px;border:1px solid var(--gold);background:transparent;color:inherit;padding:16px 30px;font:400 14px Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase;transition:all .35s ease;text-decoration:none;cursor:pointer;border-radius:0}
@@ -1038,6 +1039,7 @@ function tCapa() {
     <img class="v-logo" src="${esc(CONFIG.logo)}" alt="${esc(CONFIG.escritorio)}">
     <h1>Diagnóstico <i>Estratégico</i></h1><div class="v-sub">e Construção da Defesa Trabalhista</div><div class="v-fil"></div>
     <div class="v-nome">${esc(R.doc.nome || '')}</div>
+    ${ret ? `<div class="v-ret">Suas respostas estão guardadas · ${progresso(R.ans, R.mods)}% concluído</div>` : ''}
     ${ret ? `<button class="v-bt" data-retomar>Continuar ${ar}</button><button class="v-lk" data-ir="sum">Ver as etapas</button>` : `<button class="v-bt" data-ir="carta">Abrir ${ar}</button>`}
   </section>`;
 }
@@ -1218,7 +1220,7 @@ function ligar() {
   app.onclick = e => {
     const el = e.target;
     const irB = el.closest('[data-ir]'); if (irB) return ir({ s: irB.dataset.ir });
-    if (el.closest('[data-retomar]')) return ir(pontoDeRetomada());
+    if (el.closest('[data-retomar]')) { const vindo = R.tela.s === 'capa'; ir(pontoDeRetomada()); if (vindo) toast('Que bom ter você de volta. Suas respostas estão guardadas e seguimos de onde você parou.', 'marco'); return; }
     if (el.closest('[data-go-sum]')) return ir({ s: 'sum' });
     const et = el.closest('[data-etapa]'); if (et) return ir(pontoDaEtapa(+et.dataset.etapa));
     const cm = el.closest('[data-comecar]'); if (cm) { const i = +cm.dataset.comecar; const p = pontoDaEtapa(i); const sq = seq(i); return ir(p.s === 'abre' ? (sq[1] || { s: 'abre', i: i + 1 }) : (completa(i) ? sq[1] : p)); }
